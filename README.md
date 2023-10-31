@@ -6,3 +6,8 @@ Find your next adventure in the city that never sleeps. City Pulse is the ultima
 Explore the city's hidden gems and discover new experiences with City Pulse. Our app is constantly updated with new events, so you'll always have something to look forward to.
 
 City Pulse: Your pulse on the city. 🏙️
+
+
+<img width="328" alt="Figma_HomeScreen_2" src="https://github.com/AndreeaIlie516/City-Pulse/assets/87975075/f8bd139a-dcf9-4366-919d-cfd6ee7c629e">
+
+<img width="330" alt="Figma_Favorites" src="https://github.com/AndreeaIlie516/City-Pulse/assets/87975075/7bea4bc2-1c4c-4e9d-bf91-7f87bd169a99">
