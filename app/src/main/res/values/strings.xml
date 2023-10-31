@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">City Pulse</string>
+
+    <string name="first_event_time">27 Oct - 19:30</string>
+    <string name="first_event_band">Coma + Om la Lună</string>
+    <string name="first_event_location">Zazen Garden</string>
+
+    <string name="second_event_time">04 Nov - 21:30</string>
+    <string name="second_event_band">Vama</string>
+    <string name="second_event_location">/FORM SPACE</string>
+
+    <string name="third_event_time">11 Nov - 21:00</string>
+    <string name="third_event_band">Stratovarius\nSonata Arctica</string>
+    <string name="third_event_location">/FORM SPACE</string>
+
+    <string name="forth_event_time">06 Dec - 21:00</string>
+    <string name="forth_event_band">Asaf Avidan</string>
+    <string name="forth_event_location">/FORM SPACE</string>
+
+    <string name="fifth_event_time">07 Dec - 20:30</string>
+    <string name="fifth_event_band">Tarja</string>
+    <string name="fifth_event_location">/FORM SPACE</string>
+
+    <string name="sixth_event_time">27 Feb - 18:00</string>
+    <string name="sixth_event_band">Cradle of Filth</string>
+    <string name="sixth_event_location">/FORM SPACE</string>
+
+    <string name="popular_events">Popular Events</string>
+    <string name="filter_icon_description">Filter Icon</string>
+    <string name="favorite_icon_description">Favorite Icon</string>
 </resources>
