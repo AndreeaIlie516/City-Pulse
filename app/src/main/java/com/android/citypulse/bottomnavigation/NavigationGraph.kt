@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.android.citypulse.favoriteevents.FavoriteEventsScreen
 import com.android.citypulse.popularevents.PopularEventsScreen
+import com.android.citypulse.profile.ProfileScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
@@ -17,7 +18,7 @@ fun NavigationGraph(navController: NavHostController) {
             FavoriteEventsScreen()
         }
         composable(BottomNavItem.Profile.screen_route) {
-            FavoriteEventsScreen()
+            ProfileScreen()
         }
     }
 }

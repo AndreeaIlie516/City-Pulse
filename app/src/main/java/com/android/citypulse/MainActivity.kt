@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -24,6 +26,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.android.citypulse.bottomnavigation.BottomNavigation
 import com.android.citypulse.bottomnavigation.NavigationGraph
+import com.android.citypulse.events.Event
 import com.android.citypulse.ui.theme.CityPulseTheme
 
 class MainActivity : ComponentActivity() {
@@ -71,9 +74,16 @@ fun SetTitle(modifier: Modifier = Modifier) {
 @Composable
 fun MainScreenView() {
     val navController = rememberNavController()
+    val favoriteList = remember { mutableStateMapOf<Event, Boolean>() }
+
+    Event.values().forEach { event ->
+        favoriteList[event] = false
+    }
+
     Scaffold(
         bottomBar = { BottomNavigation(navController = navController) }
     ) {
+        SetTitle()
         NavigationGraph(navController = navController)
     }
 }

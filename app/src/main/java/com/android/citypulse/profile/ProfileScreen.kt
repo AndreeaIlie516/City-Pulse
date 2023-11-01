@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.citypulse.R
-import com.android.citypulse.SetTitle
 
 @Preview
 @Composable
@@ -27,7 +26,6 @@ fun ProfileScreen(
     Column(
         modifier = modifier
     ) {
-        SetTitle(modifier = modifier)
         SetScreenTitle(modifier = modifier)
     }
 }
@@ -36,7 +34,7 @@ fun ProfileScreen(
 fun SetScreenTitle(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .padding(start = 25.dp, top = 10.dp, bottom = 20.dp)
+            .padding(start = 25.dp, top = 65.dp, bottom = 20.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
