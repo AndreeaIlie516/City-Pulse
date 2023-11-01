@@ -1,6 +1,7 @@
 package com.android.citypulse
 
-data class FavoriteEvent (
+import com.android.citypulse.events.Event
+
+data class FavoriteEvent(
     val favorites: MutableMap<Event, Boolean> = mutableMapOf()
-){
-}
+)

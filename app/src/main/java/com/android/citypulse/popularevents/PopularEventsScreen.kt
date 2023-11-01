@@ -1,5 +1,6 @@
-package com.android.citypulse
+package com.android.citypulse.popularevents
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.android.citypulse.R
+import com.android.citypulse.SetTitle
+import com.android.citypulse.events.Event
+import com.android.citypulse.events.EventCell
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
 fun PopularEventsScreen(
@@ -47,28 +53,6 @@ fun PopularEventsScreen(
 }
 
 @Composable
-fun SetTitle(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.padding(start = 25.dp, top = 10.dp)
-    ) {
-        Column(
-            modifier = modifier
-        )
-        {
-            Text(
-                text = stringResource(R.string.app_name),
-                textAlign = TextAlign.Left,
-                color = colorResource(R.color.purple),
-                style = MaterialTheme.typography.displaySmall,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_bold))
-            )
-        }
-    }
-
-}
-
-
-@Composable
 fun SetScreenTitle(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
@@ -82,7 +66,7 @@ fun SetScreenTitle(modifier: Modifier = Modifier) {
         )
         {
             Text(
-                text = stringResource(id = R.string.popular_events),
+                text = stringResource(id = R.string.popular_events_screen),
                 textAlign = TextAlign.Left,
                 color = colorResource(R.color.black),
                 style = MaterialTheme.typography.headlineMedium,

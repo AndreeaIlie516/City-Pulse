@@ -1,9 +1,10 @@
-package com.android.citypulse
+package com.android.citypulse.events
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.android.citypulse.R
 
-enum class Event (
+enum class Event(
     @StringRes
     val time: Int,
     val band: Int,
