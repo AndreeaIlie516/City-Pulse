@@ -8,6 +8,6 @@ Explore the city's hidden gems and discover new experiences with City Pulse. Our
 City Pulse: Your pulse on the city. 🏙️
 
 
-<img width="328" alt="Figma_HomeScreen_2" src="https://github.com/AndreeaIlie516/City-Pulse/assets/87975075/f8bd139a-dcf9-4366-919d-cfd6ee7c629e">
+<img width="328" alt="Figma_HomeScreen_2" src="https://github.com/AndreeaIlie516/City-Pulse/assets/87975075/890a2f04-1157-4c2a-a918-98a9d9f98a27">
 
-<img width="330" alt="Figma_Favorites" src="https://github.com/AndreeaIlie516/City-Pulse/assets/87975075/7bea4bc2-1c4c-4e9d-bf91-7f87bd169a99">
+<img width="330" alt="Figma_Favorites" src="https://github.com/AndreeaIlie516/City-Pulse/assets/87975075/f980dc33-4668-4540-bfee-faa6e1e511d4">
