@@ -141,9 +141,7 @@ fun EventCellFavorite(
     event: Event,
     onClickEvent: () -> Unit,
     onClickEditEvent: () -> Unit
-
 ) {
-
     Row(
         modifier = Modifier
             .padding(top = 1.dp, bottom = 8.dp, start = 24.dp, end = 24.dp)

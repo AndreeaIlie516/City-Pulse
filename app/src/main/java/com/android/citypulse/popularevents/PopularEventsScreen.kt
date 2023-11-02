@@ -34,7 +34,6 @@ fun PopularEventsScreen(
     eventViewModel: EventViewModel,
     modifier: Modifier = Modifier
 ) {
-
     Column(
         modifier = modifier
     ) {

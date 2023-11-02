@@ -1,4 +1,4 @@
-package com.android.citypulse
+package com.android.citypulse.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -22,9 +22,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
+import com.android.citypulse.R
 import com.android.citypulse.bottomnavigation.BottomNavigation
-import com.android.citypulse.bottomnavigation.NavigationGraph
 import com.android.citypulse.events.EventViewModel
+import com.android.citypulse.navigation.NavigationGraph
 import com.android.citypulse.ui.theme.CityPulseTheme
 
 class MainActivity : ComponentActivity() {

@@ -4,6 +4,7 @@
     <string name="popular_events_screen">Popular Events</string>
     <string name="favorite_events_screen">Your Favorite Events</string>
     <string name="profile_screen">Your Profile</string>
+    <string name="add_private_event_screen">Add a private event</string>
 
     <string name="first_event_time">27 Oct - 19:30</string>
     <string name="first_event_band">Coma + Om la Lună</string>
@@ -34,4 +35,7 @@
     <string name="edit_icon_description">Edit Icon</string>
     <string name="add_icon_description">Add Icon</string>
     <string name="delete_icon_description">Delete Icon</string>
+
+    <string name="add_button_identifier">[AddButton]</string>
+    <string name="add_button_label">+</string>
 </resources>
