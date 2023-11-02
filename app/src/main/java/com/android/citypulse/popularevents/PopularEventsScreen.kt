@@ -24,9 +24,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.android.citypulse.R
-import com.android.citypulse.events.Event
 import com.android.citypulse.events.EventCellMain
 import com.android.citypulse.events.EventViewModel
+import com.android.citypulse.events.PredefinedEvent
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -78,13 +78,13 @@ fun SetScreenTitle(modifier: Modifier = Modifier) {
 
 @Composable
 private fun EventsList(
-    favoriteList: SnapshotStateMap<Event, Boolean>,
+    favoriteList: SnapshotStateMap<PredefinedEvent, Boolean>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        items(Event.values()) { event ->
+        items(PredefinedEvent.values()) { event ->
             favoriteList[event]?.let {
                 EventCellMain(
                     modifier = modifier,

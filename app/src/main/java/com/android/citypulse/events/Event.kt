@@ -4,7 +4,14 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.android.citypulse.R
 
-enum class Event(
+data class PrivateEvent(
+    val time: String,
+    val band: String,
+    val location: String,
+    val photo: String
+)
+
+enum class PredefinedEvent(
     @StringRes
     val time: Int,
     val band: Int,

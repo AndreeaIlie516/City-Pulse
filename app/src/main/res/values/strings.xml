@@ -36,6 +36,6 @@
     <string name="add_icon_description">Add Icon</string>
     <string name="delete_icon_description">Delete Icon</string>
 
-    <string name="add_button_identifier">[AddButton]</string>
     <string name="add_button_label">+</string>
+    <string name="add_private_event_button_label">Add Private Event</string>
 </resources>

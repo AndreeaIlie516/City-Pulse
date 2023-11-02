@@ -1,5 +1,6 @@
 package com.android.citypulse.favoriteevents
 
+import android.util.Log
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,9 +36,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.android.citypulse.R
-import com.android.citypulse.events.Event
 import com.android.citypulse.events.EventCellFavorite
+import com.android.citypulse.events.EventCellPrivate
 import com.android.citypulse.events.EventViewModel
+import com.android.citypulse.events.PredefinedEvent
+import com.android.citypulse.events.PrivateEvent
 import java.util.concurrent.CancellationException
 
 @Composable
@@ -46,16 +49,21 @@ fun FavoriteEventsScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    Log.i("FavoriteEventsScreen", "favEventsList on top: ${eventViewModel.favoriteList}")
+    Log.i("FavoriteEventsScreen", "privateEventsList on top: ${eventViewModel.events.value}")
 
     Column(
         modifier = modifier
     ) {
         SetScreenTitle(modifier = modifier)
-        EventsList(
-            favoriteList = eventViewModel.favoriteList,
-            modifier = modifier,
-            navController = navController
-        )
+        eventViewModel.events.value?.let {
+            EventsList(
+                favoriteList = eventViewModel.favoriteList,
+                privateEventsList = it,
+                modifier = modifier,
+                navController = navController
+            )
+        }
     }
 }
 
@@ -85,28 +93,39 @@ fun SetScreenTitle(modifier: Modifier = Modifier) {
 
 @Composable
 private fun EventsList(
-    favoriteList: SnapshotStateMap<Event, Boolean>,
+    favoriteList: SnapshotStateMap<PredefinedEvent, Boolean>,
+    privateEventsList: List<PrivateEvent>,
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    Log.i("FavoriteEventsScreen", "privateEventsList: $privateEventsList")
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = modifier
         ) {
-            items(Event.values()) { event ->
+            items(PredefinedEvent.values()) { event ->
                 if (favoriteList[event] == true) {
                     EventCellFavorite(
                         modifier = modifier,
                         event = event,
                         onClickEvent = {},
-                        onClickEditEvent = {},
                     )
                 }
+            }
+            items(privateEventsList) { event ->
+                EventCellPrivate(
+                    modifier = modifier,
+                    event = event,
+                    onClickEvent = {},
+                    onClickEditEvent = {}
+                )
             }
             item {
                 Spacer(modifier = Modifier.height(150.dp))
             }
         }
+
+
         AddButton(
             modifier = Modifier
                 .align(BottomEnd)
