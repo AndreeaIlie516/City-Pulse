@@ -1,6 +1,5 @@
 package com.android.citypulse.favoriteevents
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,8 +9,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,25 +17,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.citypulse.R
 import com.android.citypulse.events.Event
-import com.android.citypulse.events.EventCell
+import com.android.citypulse.events.EventCellFavorite
+import com.android.citypulse.events.EventViewModel
 
-
-@Preview
 @Composable
 fun FavoriteEventsScreen(
+    eventViewModel: EventViewModel,
     modifier: Modifier = Modifier
 ) {
-    val favoriteList = remember { mutableStateMapOf<Event, Boolean>() }
 
     Column(
         modifier = modifier
     ) {
         SetScreenTitle(modifier = modifier)
-        EventsList(favoriteList = favoriteList, modifier = modifier)
+        EventsList(favoriteList = eventViewModel.favoriteList, modifier = modifier)
     }
 }
 
@@ -76,15 +71,11 @@ private fun EventsList(
     ) {
         items(Event.values()) { event ->
             if (favoriteList[event] == true) {
-                EventCell(
+                EventCellFavorite(
                     modifier = modifier,
                     event = event,
                     onClickEvent = {},
-                    onClickFavoriteEvent = {
-                        favoriteList[event] = !favoriteList[event]!!
-                        Log.i("PopularEventsScreen", "Favorites: $favoriteList")
-                    },
-                    isFavorite = favoriteList[event] ?: false
+                    onClickEditEvent = {}
                 )
             }
         }

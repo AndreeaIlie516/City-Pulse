@@ -31,4 +31,7 @@
 
     <string name="filter_icon_description">Filter Icon</string>
     <string name="favorite_icon_description">Favorite Icon</string>
+    <string name="edit_icon_description">Edit Icon</string>
+    <string name="add_icon_description">Add Icon</string>
+    <string name="delete_icon_description">Delete Icon</string>
 </resources>
