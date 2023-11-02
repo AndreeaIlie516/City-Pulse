@@ -1,4 +1,4 @@
-package com.android.citypulse.privateevent
+package com.android.citypulse.addprivateevent
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
@@ -52,7 +52,11 @@ fun AddPrivateEventScreen(
             modifier = modifier,
             stringResource(id = R.string.add_private_event_screen)
         )
-        FieldsList(modifier = modifier, navController = navController, eventViewModel)
+        FieldsList(
+            modifier = modifier,
+            navController = navController,
+            eventViewModel
+        )
     }
 
 

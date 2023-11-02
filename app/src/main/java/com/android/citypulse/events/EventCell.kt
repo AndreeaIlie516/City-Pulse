@@ -283,6 +283,21 @@ fun EventCellPrivate(
                 fontFamily = FontFamily(Font(R.font.sf_pro_display_bold))
             )
         }
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 15.dp, top = 15.dp)
+                .size(30.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { onClickEditEvent() }
+                ),
+
+            alignment = Alignment.CenterEnd,
+            painter = painterResource(id = R.drawable.edit_icon),
+            contentDescription = stringResource(id = R.string.edit_icon_description),
+        )
     }
 }
 

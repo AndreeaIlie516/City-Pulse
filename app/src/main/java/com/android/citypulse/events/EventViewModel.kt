@@ -17,4 +17,11 @@ class EventViewModel : ViewModel() {
         val currentEvents = events.value ?: emptyList()
         events.value = currentEvents + event
     }
+
+    var privateEventToEdit = PrivateEvent("", "", "", "")
+
+    fun updateEvent(oldEvent: PrivateEvent, newEvent: PrivateEvent) {
+        val currentEvents = events.value ?: emptyList()
+        events.value = currentEvents - oldEvent + newEvent
+    }
 }

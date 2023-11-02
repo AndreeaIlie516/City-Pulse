@@ -60,6 +60,7 @@ fun FavoriteEventsScreen(
             EventsList(
                 favoriteList = eventViewModel.favoriteList,
                 privateEventsList = it,
+                eventViewModel = eventViewModel,
                 modifier = modifier,
                 navController = navController
             )
@@ -95,6 +96,7 @@ fun SetScreenTitle(modifier: Modifier = Modifier) {
 private fun EventsList(
     favoriteList: SnapshotStateMap<PredefinedEvent, Boolean>,
     privateEventsList: List<PrivateEvent>,
+    eventViewModel: EventViewModel,
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
@@ -117,7 +119,10 @@ private fun EventsList(
                     modifier = modifier,
                     event = event,
                     onClickEvent = {},
-                    onClickEditEvent = {}
+                    onClickEditEvent = {
+                        eventViewModel.privateEventToEdit = event
+                        navController.navigate("update")
+                    }
                 )
             }
             item {

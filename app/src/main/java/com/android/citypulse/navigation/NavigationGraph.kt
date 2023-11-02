@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.android.citypulse.addprivateevent.AddPrivateEventScreen
 import com.android.citypulse.bottomnavigation.BottomNavItem
 import com.android.citypulse.events.EventViewModel
 import com.android.citypulse.favoriteevents.FavoriteEventsScreen
 import com.android.citypulse.popularevents.PopularEventsScreen
-import com.android.citypulse.privateevent.AddPrivateEventScreen
 import com.android.citypulse.profile.ProfileScreen
+import com.android.citypulse.updateprivateevent.UpdatePrivateEventScreen
 
 @Composable
 fun NavigationGraph(
@@ -28,6 +29,9 @@ fun NavigationGraph(
         }
         composable(NavItem.Add.screenRoute) {
             AddPrivateEventScreen(navController = navController, eventViewModel = eventViewModel)
+        }
+        composable(NavItem.Update.screenRoute) {
+            UpdatePrivateEventScreen(navController = navController, eventViewModel = eventViewModel)
         }
     }
 }
