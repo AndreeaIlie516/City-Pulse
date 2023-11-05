@@ -1,21 +1,41 @@
 package com.android.citypulse.events
 
+
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -217,6 +237,7 @@ fun EventCellPrivate(
     onClickEvent: () -> Unit,
     onClickEditEvent: () -> Unit
 ) {
+
     Row(
         modifier = Modifier
             .padding(top = 1.dp, bottom = 8.dp, start = 24.dp, end = 24.dp)
@@ -236,23 +257,25 @@ fun EventCellPrivate(
         verticalAlignment = Alignment.Top,
 
         ) {
-        AsyncImage(
-            modifier = Modifier
-                .padding(start = 10.dp, top = 10.dp, bottom = 10.dp, end = 10.dp)
-                .size(width = 87.dp, height = 74.dp)
-                .background(
-                    color = colorResource(id = R.color.light_grey),
-                    shape = AbsoluteRoundedCornerShape(
-                        topLeft = 10.dp,
-                        topRight = 10.dp,
-                        bottomLeft = 10.dp,
-                        bottomRight = 10.dp
-                    )
-                ),
-            model = event.photo,
-            placeholder = painterResource(id = R.drawable.first_event_photo),
-            contentDescription = "Event image"
-        )
+        if (event.photo != "") {
+            AsyncImage(
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 10.dp, bottom = 10.dp, end = 10.dp)
+                    .size(width = 87.dp, height = 74.dp)
+                    .background(
+                        color = colorResource(id = R.color.light_grey),
+                        shape = AbsoluteRoundedCornerShape(
+                            topLeft = 10.dp,
+                            topRight = 10.dp,
+                            bottomLeft = 10.dp,
+                            bottomRight = 10.dp
+                        )
+                    ),
+                model = event.photo,
+                placeholder = painterResource(id = R.drawable.first_event_photo),
+                contentDescription = "Event image"
+            )
+        }
         Column(
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
@@ -300,6 +323,117 @@ fun EventCellPrivate(
         )
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeleteItem(
+    modifier: Modifier = Modifier,
+    event: PrivateEvent,
+    onClickEvent: () -> Unit,
+    onClickEditEvent: () -> Unit,
+    onDelete: () -> Unit
+) {
+    val context = LocalContext.current
+    var showDialog by remember { mutableStateOf(false) }
+    var show by remember { mutableStateOf(true) }
+    val dismissState = rememberDismissState(
+        confirmValueChange = {
+            it == DismissValue.DismissedToStart
+        }, positionalThreshold = { 150.dp.toPx() }
+    )
+    AnimatedVisibility(
+        show, exit = fadeOut(spring())
+    ) {
+        SwipeToDismiss(
+            state = dismissState,
+            modifier = Modifier,
+            background = {
+                DismissBackground(dismissState)
+            },
+            dismissContent = {
+                EventCellPrivate(
+                    event = event,
+                    onClickEvent = onClickEvent,
+                    onClickEditEvent = onClickEditEvent
+                )
+            }
+        )
+    }
+
+    LaunchedEffect(key1 = dismissState.currentValue) {
+        if (dismissState.currentValue == DismissValue.DismissedToStart) {
+            showDialog = true
+            dismissState.reset()
+        }
+    }
+
+    if (showDialog) {
+        ShowConfirmationDialog(onConfirm = {
+            onDelete()
+            Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show()
+            showDialog = false
+            show = false
+        }, onDismiss = {
+            showDialog = false
+        })
+    }
+}
+
+@Composable
+fun ShowConfirmationDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {
+            onDismiss()
+        },
+        title = {
+            Text(
+                text = stringResource(id = R.string.delete_private_event_confirmation_question),
+                textAlign = TextAlign.Center,
+            )
+        },
+        buttons = {
+            Row(
+                modifier = Modifier.padding(top = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 60.dp),
+                    onClick = {
+                        onConfirm()
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.purple))
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.delete_private_event_confirm),
+                        color = colorResource(id = R.color.white)
+                    )
+                }
+                Spacer(modifier = Modifier.width(80.dp))
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(end = 50.dp),
+                    onClick = {
+                        onDismiss()
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.purple))
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.delete_private_event_dismiss),
+                        color = colorResource(id = R.color.white)
+                    )
+                }
+            }
+        }
+    )
+}
+
 
 
 

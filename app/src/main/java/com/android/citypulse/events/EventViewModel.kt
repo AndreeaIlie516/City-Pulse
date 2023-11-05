@@ -24,4 +24,9 @@ class EventViewModel : ViewModel() {
         val currentEvents = events.value ?: emptyList()
         events.value = currentEvents - oldEvent + newEvent
     }
+
+    fun deleteEvent(event: PrivateEvent) {
+        val currentEvents = events.value ?: emptyList()
+        events.value = currentEvents - event
+    }
 }
