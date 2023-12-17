@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">City Pulse</string>
 
+    <string name="popular_products_screen">Popular Products</string>
+    <string name="first_product_name">Nokia 3310 Mobile Phone</string>
+    <string name="first_product_price">70 lei</string>
+
+    <string name="first_product_owner">Aurel Vlaicu</string>
+
+    <string name="second_product_name">Dacia 1310 Sport</string>
+    <string name="second_product_price">420 lei</string>
+    <string name="second_product_owner">Aurel Vlaicu</string>
+
+    <string name="third_product_name">Holy Bible</string>
+    <string name="third_product_price">7 lei</string>
+    <string name="third_product_owner">Aurel Vlaicu</string>
+
     <string name="popular_events_screen">Popular Events</string>
     <string name="favorite_events_screen">Your Favorite Events</string>
     <string name="profile_screen">Your Profile</string>
