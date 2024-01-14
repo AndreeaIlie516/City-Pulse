@@ -37,7 +37,7 @@ fun EventCellMainScreen(
 ) {
 
     val drawableId =
-        if (event.isFavourite) R.drawable.favorite_selected else R.drawable.favorite_unselected
+        if (event.is_favourite) R.drawable.favorite_selected else R.drawable.favorite_unselected
     Row(
         modifier = Modifier
             .padding(top = 1.dp, bottom = 8.dp, start = 24.dp, end = 24.dp)
@@ -57,7 +57,7 @@ fun EventCellMainScreen(
         verticalAlignment = Alignment.Top,
 
         ) {
-        if (event.imagePath != "") {
+        if (event.image_url != "") {
             AsyncImage(
                 modifier = Modifier
                     .padding(start = 10.dp, top = 10.dp, bottom = 10.dp, end = 10.dp)
@@ -71,7 +71,7 @@ fun EventCellMainScreen(
                             bottomRight = 10.dp
                         )
                     ),
-                model = event.imagePath,
+                model = event.image_url,
                 placeholder = painterResource(id = R.drawable.first_event_photo),
                 contentDescription = "Event image"
             )
@@ -153,7 +153,7 @@ fun EventCellFavoriteScreen(
         verticalAlignment = Alignment.Top,
 
         ) {
-        if (event.imagePath != "") {
+        if (event.image_url != "") {
             AsyncImage(
                 modifier = Modifier
                     .padding(start = 10.dp, top = 10.dp, bottom = 10.dp, end = 10.dp)
@@ -167,7 +167,7 @@ fun EventCellFavoriteScreen(
                             bottomRight = 10.dp
                         )
                     ),
-                model = event.imagePath,
+                model = event.image_url,
                 placeholder = painterResource(id = R.drawable.first_event_photo),
                 contentDescription = "Event image"
             )
@@ -202,7 +202,7 @@ fun EventCellFavoriteScreen(
                 fontFamily = FontFamily(Font(R.font.sf_pro_display_bold))
             )
         }
-        if (event.isPrivate) {
+        if (event.is_private) {
             Image(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -58,18 +58,16 @@ constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    var currentEventId: Int? = null
+    var currentEventId: String? = null
 
     init {
-        Log.i("AddEditEventViewModel", "intra")
-        Log.i("AddEditEventViewModel", "id: ${savedStateHandle.get<Int>("eventId")}")
         savedStateHandle.get<Int>("eventId")?.let { eventId ->
 
             if (eventId != -1) {
                 Log.i("AddEditEventViewModel", "eventId: $eventId")
                 viewModelScope.launch {
                     eventUseCases.getEventUseCase(eventId)?.also { event ->
-                        currentEventId = event.id
+                        currentEventId = event.ID
                         _eventTime.value = eventTime.value.copy(
                             text = event.time,
                             isHintVisible = false
@@ -83,7 +81,7 @@ constructor(
                             isHintVisible = false
                         )
                         _eventImagePath.value = eventImagePath.value.copy(
-                            text = event.imagePath,
+                            text = event.image_url,
                             isHintVisible = false
                         )
                     }
@@ -148,32 +146,36 @@ constructor(
                 )
             }
 
-            is AddEditEventEvent.SaveEvent -> {
+            is AddEditEventEvent.SaveNewEvent -> {
                 viewModelScope.launch {
                     try {
                         val event = if (currentEventId != null) {
                             Event(
-                                id = currentEventId!!,
+                                idLocal = 0,
+                                ID = currentEventId!!,
                                 time = eventTime.value.text,
                                 band = eventBand.value.text,
                                 location = eventLocation.value.text,
-                                imagePath = eventImagePath.value.text,
-                                isFavourite = false,
-                                isPrivate = true
+                                image_url = eventImagePath.value.text,
+                                is_favourite = false,
+                                is_private = true,
+                                action = null
                             )
                         } else {
                             Event(
-                                id = 0,
+                                idLocal = 0,
+                                ID = "0",
                                 time = eventTime.value.text,
                                 band = eventBand.value.text,
                                 location = eventLocation.value.text,
-                                imagePath = eventImagePath.value.text,
-                                isFavourite = false,
-                                isPrivate = true
+                                image_url = eventImagePath.value.text,
+                                is_favourite = false,
+                                is_private = true,
+                                action = null
                             )
                         }
                         eventUseCases.addEventUseCase(event)
-                        _eventFlow.emit(UiEvent.SaveEvent)
+                        _eventFlow.emit(UiEvent.SaveNewEvent)
                     } catch (e: InvalidEventException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
@@ -184,11 +186,52 @@ constructor(
                 }
 
             }
+
+            is AddEditEventEvent.SaveUpdatedEvent -> {
+                viewModelScope.launch {
+                    try {
+                        val event = if (currentEventId != null) {
+                            Event(
+                                idLocal = currentEventId!!.toInt(),
+                                ID = currentEventId!!,
+                                time = eventTime.value.text,
+                                band = eventBand.value.text,
+                                location = eventLocation.value.text,
+                                image_url = eventImagePath.value.text,
+                                is_favourite = false,
+                                is_private = true,
+                                action = null
+                            )
+                        } else {
+                            Event(
+                                idLocal = 0,
+                                ID = "0",
+                                time = eventTime.value.text,
+                                band = eventBand.value.text,
+                                location = eventLocation.value.text,
+                                image_url = eventImagePath.value.text,
+                                is_favourite = false,
+                                is_private = true,
+                                action = null
+                            )
+                        }
+                        eventUseCases.updateEventUseCase(event)
+                        _eventFlow.emit(UiEvent.SaveUpdatedEvent)
+                    } catch (e: InvalidEventException) {
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                message = e.message ?: "Couldn't save event"
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()
-        object SaveEvent : UiEvent()
+        object SaveNewEvent : UiEvent()
+        object SaveUpdatedEvent : UiEvent()
     }
 }

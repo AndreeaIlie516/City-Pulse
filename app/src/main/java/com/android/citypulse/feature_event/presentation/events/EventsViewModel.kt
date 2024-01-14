@@ -1,10 +1,12 @@
 package com.android.citypulse.feature_event.presentation.events
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.citypulse.feature_event.domain.model.Event
+import com.android.citypulse.feature_event.domain.repository.RemoteEventRepository
 import com.android.citypulse.feature_event.domain.use_case.EventUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class EventsViewModel
 @Inject
 constructor(
-    private val eventUseCases: EventUseCases
+    private val eventUseCases: EventUseCases,
+    private val remoteEventRepository: RemoteEventRepository
 ) : ViewModel() {
 
     private val _state = mutableStateOf(EventsState())
@@ -29,17 +32,102 @@ constructor(
 
     init {
         getEvents()
-        initializeDefaultEvents()
+        observeWebSocketEvents()
+    }
+
+    private fun observeWebSocketEvents() {
+        viewModelScope.launch {
+            remoteEventRepository.observeWebSocketEvents().collect { webSocketUpdate ->
+                // Handle the WebSocket update
+                when (webSocketUpdate.action) {
+                    "CreatedEvent" -> {
+                        viewModelScope.launch {
+                            eventUseCases.addEventUseCase(
+                                Event(
+                                    time = webSocketUpdate.event.time,
+                                    band = webSocketUpdate.event.band,
+                                    location = webSocketUpdate.event.location,
+                                    image_url = webSocketUpdate.event.image_url,
+                                    is_favourite = webSocketUpdate.event.is_favourite ?: false,
+                                    is_private = webSocketUpdate.event.is_private ?: true,
+                                    ID = "0",
+                                    idLocal = 0,
+                                    action = null
+                                )
+
+                            )
+                            getEvents()
+                        }
+                    }
+
+                    "UpdateEvent" -> {
+                        viewModelScope.launch {
+                            eventUseCases.addEventUseCase(
+                                Event(
+                                    time = webSocketUpdate.event.time,
+                                    band = webSocketUpdate.event.band,
+                                    location = webSocketUpdate.event.location,
+                                    image_url = webSocketUpdate.event.image_url,
+                                    is_favourite = webSocketUpdate.event.is_favourite ?: false,
+                                    is_private = webSocketUpdate.event.is_private ?: true,
+                                    ID = "0",
+                                    idLocal = 0,
+                                    action = null
+                                )
+                            )
+                            getEvents()
+                        }
+                    }
+
+                    "DeleteEvent" -> {
+                        viewModelScope.launch {
+                            eventUseCases.deleteEventUseCase(
+                                Event(
+                                    time = webSocketUpdate.event.time,
+                                    band = webSocketUpdate.event.band,
+                                    location = webSocketUpdate.event.location,
+                                    image_url = webSocketUpdate.event.image_url,
+                                    is_favourite = webSocketUpdate.event.is_favourite ?: false,
+                                    is_private = webSocketUpdate.event.is_private ?: true,
+                                    ID = "0",
+                                    idLocal = 0,
+                                    action = null
+                                )
+                            )
+                            getEvents()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun onEvent(event: EventsEvent) {
         when (event) {
+            is EventsEvent.CreateEvent -> {
+                viewModelScope.launch {
+                    eventUseCases.addEventUseCase(
+                        event.event
+                    )
+                    getEvents()
+                }
+            }
+
             is EventsEvent.DeleteEvent -> {
                 viewModelScope.launch {
                     eventUseCases.deleteEventUseCase(
                         event.event
                     )
                     recentlyDeletedEvent = event.event
+                    getEvents()
+                }
+            }
+
+            is EventsEvent.UpdateEvent -> {
+                viewModelScope.launch {
+                    eventUseCases.updateEventUseCase(
+                        event.event
+                    )
                     getEvents()
                 }
             }
@@ -63,33 +151,30 @@ constructor(
     }
 
     private fun getEvents() {
+        Log.d("EventsViewModel", "getEvents() called")
         getEventsJob?.cancel()
         getEventsJob = eventUseCases.getEventsUseCase()
             .onEach { events ->
                 _state.value = state.value.copy(
                     events = events
                 )
+                Log.d("EventsViewModel", "ViewModel state updated with new events: $events")
             }
             .launchIn(viewModelScope)
     }
 
-    private fun getDefaultEvents(): List<Event> {
-        return listOf(
-        )
-    }
-
-    private fun initializeDefaultEvents() {
+    fun onToggleFavourite(event: Event) {
+        Log.d("EventsViewModel", "onToggleFavourite")
         viewModelScope.launch {
-            val defaultEvents = getDefaultEvents()
-            defaultEvents.forEach { event ->
-                eventUseCases.addEventUseCase(event)
-            }
+            eventUseCases.toggleFavouriteStatus(event)
+            getEvents()
         }
     }
 
-    fun onToggleFavourite(event: Event) {
+    fun deleteAllEvents() {
+        Log.d("EventsViewModel", "deleteAllEvents called")
         viewModelScope.launch {
-            eventUseCases.toggleFavouriteStatus(event)
+            eventUseCases.deleteAllEventsUseCase()
             getEvents()
         }
     }

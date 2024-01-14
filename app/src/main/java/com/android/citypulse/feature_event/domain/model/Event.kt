@@ -5,13 +5,24 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Event(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val idLocal: Int,
+    val ID: String,
     val time: String,
     val band: String,
     val location: String,
-    val imagePath: String,
-    val isPrivate: Boolean,
-    var isFavourite: Boolean
+    val image_url: String,
+    val is_private: Boolean,
+    var is_favourite: Boolean,
+    var action: String?
+)
+
+data class EventServer(
+    val time: String,
+    val band: String,
+    val location: String,
+    val image_url: String,
+    val is_private: Boolean?,
+    val is_favourite: Boolean?
 )
 
 class InvalidEventException(message: String) : Exception(message)

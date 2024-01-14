@@ -6,7 +6,7 @@ import com.android.citypulse.feature_event.domain.model.InvalidEventException
 import com.android.citypulse.feature_event.domain.repository.LocalEventRepository
 import com.android.citypulse.feature_event.domain.repository.RemoteEventRepository
 
-class AddEventUseCase(
+class UpdateEventUseCase(
     private val localRepository: LocalEventRepository,
     private val remoteRepository: RemoteEventRepository,
     private val networkChecker: NetworkChecker
@@ -25,13 +25,13 @@ class AddEventUseCase(
         }
         if (networkChecker.isNetworkAvailable()) {
             try {
-                remoteRepository.insertEvent(event)
+                remoteRepository.updateEvent(event)
                 localRepository.insertEvent(event.copy(action = null))
             } catch (e: Exception) {
-                localRepository.insertEvent(event.copy(action = "pending_add"))
+                localRepository.insertEvent(event.copy(action = "pending_update"))
             }
         } else {
-            localRepository.insertEvent(event.copy(action = "pending_add"))
+            localRepository.insertEvent(event.copy(action = "pending_update"))
         }
     }
 }

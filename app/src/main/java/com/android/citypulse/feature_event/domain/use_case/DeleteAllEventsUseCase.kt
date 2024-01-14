@@ -1,13 +1,14 @@
 package com.android.citypulse.feature_event.domain.use_case
 
-import com.android.citypulse.feature_event.domain.model.Event
+import android.util.Log
 import com.android.citypulse.feature_event.domain.repository.LocalEventRepository
 
-class GetEventUseCase(
+class DeleteAllEventsUseCase(
     private val repository: LocalEventRepository
 ) {
 
-    suspend operator fun invoke(id: Int): Event? {
-        return repository.getEventById(id)
+    suspend operator fun invoke() {
+        Log.d("deleteAllEventsUseCase", "deleteAllEvents called")
+        repository.deleteAll()
     }
 }

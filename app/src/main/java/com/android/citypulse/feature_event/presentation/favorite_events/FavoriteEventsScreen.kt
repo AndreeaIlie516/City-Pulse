@@ -92,18 +92,18 @@ private fun EventsList(
         LazyColumn(
             modifier = modifier
         ) {
-            val filteredEvents = eventList.filter { it.isFavourite || it.isPrivate }
+            val filteredEvents = eventList.filter { it.is_favourite || it.is_private }
             items(filteredEvents) { event ->
                 DeleteItem(event = event,
                     onClickEvent = {},
                     onClickEditEvent = {
                         navController.navigate(
                             Screen.AddEditEventScreen.route +
-                                    "?eventId=${event.id}"
+                                    "?eventId=${event.ID}"
                         )
                     },
                     onDelete = {
-                        if (event.isPrivate) {
+                        if (event.is_private) {
                             eventViewModel.onEvent(EventsEvent.DeleteEvent(event))
                         } else {
                             eventViewModel.onEvent(EventsEvent.DeleteEventFromFavourites(event))

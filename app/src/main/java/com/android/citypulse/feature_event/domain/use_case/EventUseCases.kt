@@ -5,6 +5,8 @@ data class EventUseCases(
     val getEventUseCase: GetEventUseCase,
     val addEventUseCase: AddEventUseCase,
     val deleteEventUseCase: DeleteEventUseCase,
+    val deleteAllEventsUseCase: DeleteAllEventsUseCase,
     val deleteEventFromFavouritesUseCase: DeleteEventFromFavouritesUseCase,
-    val toggleFavouriteStatus: ToggleFavouriteStatus
+    val toggleFavouriteStatus: ToggleFavouriteStatus,
+    val updateEventUseCase: UpdateEventUseCase
 )

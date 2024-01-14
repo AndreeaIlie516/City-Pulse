@@ -26,8 +26,6 @@ fun PopularEventsScreen(
     modifier: Modifier = Modifier,
     eventViewModel: EventsViewModel = hiltViewModel()
 ) {
-    val state = eventViewModel.state.value
-
     Column(
         modifier = modifier
     ) {
@@ -70,7 +68,7 @@ private fun EventsList(
         modifier = modifier
     ) {
         items(state.events) { event ->
-            if (!event.isPrivate) {
+            if (!event.is_private) {
                 EventCellMainScreen(
                     modifier = modifier,
                     event = event,

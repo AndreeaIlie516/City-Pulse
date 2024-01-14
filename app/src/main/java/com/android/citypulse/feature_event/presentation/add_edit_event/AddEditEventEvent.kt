@@ -12,6 +12,7 @@ sealed class AddEditEventEvent {
     data class EnteredImagePath(val value: String) : AddEditEventEvent()
     data class ChangeImagePathFocus(val focusState: FocusState) : AddEditEventEvent()
 
-    object SaveEvent : AddEditEventEvent()
+    object SaveNewEvent : AddEditEventEvent()
+    object SaveUpdatedEvent : AddEditEventEvent()
 
 }

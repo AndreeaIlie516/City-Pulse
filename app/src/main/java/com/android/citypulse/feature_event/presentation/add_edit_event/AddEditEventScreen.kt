@@ -1,6 +1,7 @@
 package com.android.citypulse.feature_event.presentation.add_edit_event
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -68,7 +69,7 @@ fun SetScreenTitle(
 fun AddEditEventScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: AddEditEventViewModel = hiltViewModel()
+    viewModel: AddEditEventViewModel = hiltViewModel(),
 ) {
     val timeState = viewModel.eventTime.value
     val bandState = viewModel.eventBand.value
@@ -80,6 +81,14 @@ fun AddEditEventScreen(
     val scope = rememberCoroutineScope()
 
     val eventId = viewModel.currentEventId
+
+    val screenScope = if (eventId == null) {
+        "add"
+    } else {
+        "update"
+    }
+
+    Log.d("AddEditEventScreen", "Events: ${viewModel.currentEventId}")
 
     val titleTextId = if (eventId == null) {
         R.string.add_private_event_screen
@@ -101,7 +110,13 @@ fun AddEditEventScreen(
                     )
                 }
 
-                is AddEditEventViewModel.UiEvent.SaveEvent -> {
+                is AddEditEventViewModel.UiEvent.SaveNewEvent -> {
+                    Log.d("AddEditEventScreen", "Should navigate up")
+                    navController.navigateUp()
+                }
+
+                is AddEditEventViewModel.UiEvent.SaveUpdatedEvent -> {
+                    Log.d("AddEditEventScreen", "Should navigate up")
                     navController.navigateUp()
                 }
             }
@@ -185,7 +200,11 @@ fun AddEditEventScreen(
                         containerColor = colorResource(id = R.color.purple)
                     ),
                     onClick = {
-                        viewModel.onEvent(AddEditEventEvent.SaveEvent)
+                        if (screenScope == "add") {
+                            viewModel.onEvent(AddEditEventEvent.SaveNewEvent)
+                        } else {
+                            viewModel.onEvent(AddEditEventEvent.SaveUpdatedEvent)
+                        }
                     }
                 ) {
                     Text(
