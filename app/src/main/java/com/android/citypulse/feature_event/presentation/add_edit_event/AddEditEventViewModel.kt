@@ -61,12 +61,15 @@ constructor(
     var currentEventId: String? = null
 
     init {
+
         savedStateHandle.get<Int>("eventId")?.let { eventId ->
 
             if (eventId != -1) {
+                //currentEventId = eventId.toString()
                 Log.i("AddEditEventViewModel", "eventId: $eventId")
                 viewModelScope.launch {
                     eventUseCases.getEventUseCase(eventId)?.also { event ->
+                        Log.i("AddEditEventViewModel", "currentEventID: $currentEventId")
                         currentEventId = event.ID
                         _eventTime.value = eventTime.value.copy(
                             text = event.time,
@@ -188,6 +191,7 @@ constructor(
             }
 
             is AddEditEventEvent.SaveUpdatedEvent -> {
+                Log.d("AddEditEventViewModel", "currentEventId: $currentEventId")
                 viewModelScope.launch {
                     try {
                         val event = if (currentEventId != null) {
@@ -205,7 +209,7 @@ constructor(
                         } else {
                             Event(
                                 idLocal = 0,
-                                ID = currentEventId!!,
+                                ID = "0",
                                 time = eventTime.value.text,
                                 band = eventBand.value.text,
                                 location = eventLocation.value.text,

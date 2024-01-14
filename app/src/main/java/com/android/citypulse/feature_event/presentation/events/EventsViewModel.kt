@@ -13,6 +13,7 @@ import com.android.citypulse.feature_event.domain.use_case.EventUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -35,6 +36,9 @@ constructor(
     private var getEventsJob: Job? = null
 
     val snackbarHostState = SnackbarHostState()
+
+    val deletionStatus = MutableStateFlow<Boolean?>(null)
+
 
     init {
         getEvents()
@@ -114,8 +118,7 @@ constructor(
         }
     }
 
-    fun onEvent(event: EventsEvent): Boolean {
-        var isDeleteSuccessful = false
+    fun onEvent(event: EventsEvent) {
         when (event) {
             is EventsEvent.CreateEvent -> {
                 viewModelScope.launch {
@@ -134,13 +137,15 @@ constructor(
                         Log.d("EventsViewModel", "On try")
                         if (result == "Success") {
                             Log.d("EventsViewModel", "Success")
-                            isDeleteSuccessful = true
+                            deletionStatus.emit(true)
                             getEvents()
                         } else {
+                            deletionStatus.emit(false)
                             Log.d("EventsViewModel", "On try")
                             showSnackbarMessage("Cannot delete event when offline")
                         }
                     } catch (e: Exception) {
+                        deletionStatus.emit(false)
                         Log.d("EventsViewModel", "On catch")
                         showSnackbarMessage("Cannot delete event when offline")
                     }
@@ -164,13 +169,15 @@ constructor(
                         Log.d("EventsViewModel", "On try")
                         if (result == "Success") {
                             Log.d("EventsViewModel", "Success")
-                            isDeleteSuccessful = true
+                            deletionStatus.emit(true)
                             getEvents()
                         } else {
+                            deletionStatus.emit(false)
                             Log.d("EventsViewModel", "On try")
                             showSnackbarMessage("Cannot delete event when offline")
                         }
                     } catch (e: Exception) {
+                        deletionStatus.emit(false)
                         Log.d("EventsViewModel", "On catch")
                         showSnackbarMessage("Cannot delete event when offline")
                     }
@@ -184,7 +191,7 @@ constructor(
                 }
             }
         }
-        return isDeleteSuccessful
+
     }
 
     private fun getEvents() {
@@ -215,9 +222,6 @@ constructor(
 //                        remoteEventRepository.deleteEvent(event)
 //                        localEventRepository.deleteEvent(event)
 //                    }
-                }
-                if (event.action == "add" || event.action == "update") {
-                    localEventRepository.insertEvent(event.copy(action = null))
                 }
             }
         }

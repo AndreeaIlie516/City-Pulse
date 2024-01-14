@@ -1,5 +1,6 @@
 package com.android.citypulse.feature_event.domain.use_case
 
+import android.util.Log
 import com.android.citypulse.feature_event.data.network.NetworkChecker
 import com.android.citypulse.feature_event.domain.model.Event
 import com.android.citypulse.feature_event.domain.model.InvalidEventException
@@ -26,7 +27,8 @@ class AddEventUseCase(
         try {
             if (networkChecker.isNetworkAvailable()) {
                 val newEvent = remoteRepository.insertEvent(event)
-                localRepository.insertEvent(event.copy(action = null))
+                Log.d("AddEventUseCase", "newEvent: $newEvent")
+                localRepository.insertEvent(event.copy(ID = newEvent.ID, action = null))
             } else {
                 localRepository.insertEvent(event.copy(action = "add"))
             }

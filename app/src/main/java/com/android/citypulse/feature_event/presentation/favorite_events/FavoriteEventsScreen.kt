@@ -1,6 +1,7 @@
 package com.android.citypulse.feature_event.presentation.favorite_events
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -105,9 +106,11 @@ private fun EventsList(
             val filteredEvents =
                 eventList.filter { (it.is_favourite || it.is_private) && it.action != "delete" }
             items(filteredEvents) { event ->
-                DeleteItem(event = event,
+                DeleteItem(
+                    event = event,
                     onClickEvent = {},
                     onClickEditEvent = {
+                        Log.d("FavoriteEventScreen", "eventId: ${event.ID}")
                         navController.navigate(
                             Screen.AddEditEventScreen.route +
                                     "?eventId=${event.ID}"
@@ -119,7 +122,8 @@ private fun EventsList(
                         } else {
                             eventViewModel.onEvent(EventsEvent.DeleteEventFromFavourites(event))
                         }
-                    }
+                    },
+                    eventViewModel = eventViewModel
                 )
             }
             item {

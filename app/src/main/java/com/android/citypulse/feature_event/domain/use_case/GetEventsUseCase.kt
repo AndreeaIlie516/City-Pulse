@@ -27,10 +27,11 @@ class GetEventsUseCase(
                 val remoteEvents = remoteRepository.getEvents()
                 Log.d("GetEventsUseCase", "remoteEvents: $remoteEvents")
 
-                val mergedEvents =
-                    localEvents.combine(flowOf(remoteEvents)) { flowValue, listValue ->
-                        (flowValue + listValue).distinctBy { it.ID }
-                    }
+                val mergedEvents = localEvents.combine(flowOf(remoteEvents)) { local, remote ->
+                    Log.d("GetEventsUseCase", "Merging: Local - $local, Remote - $remote")
+                    val allEvents = (local + remote)
+                    allEvents.distinctBy { Triple(it.time, it.band, it.location) }
+                }
 
                 localRepository.clearAndCacheEvents(mergedEvents)
 

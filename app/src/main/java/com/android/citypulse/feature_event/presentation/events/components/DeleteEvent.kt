@@ -10,6 +10,7 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.android.citypulse.feature_event.domain.model.Event
+import com.android.citypulse.feature_event.presentation.events.EventsViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +29,8 @@ fun DeleteItem(
     event: Event,
     onClickEvent: () -> Unit,
     onClickEditEvent: () -> Unit,
-    onDelete: () -> Boolean // Returns a Boolean indicating success or failure
+    onDelete: () -> Unit,
+    eventViewModel: EventsViewModel
 ) {
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
@@ -35,6 +38,9 @@ fun DeleteItem(
     val dismissState = rememberDismissState(confirmValueChange = {
         it == DismissValue.DismissedToStart
     }, positionalThreshold = { 150.dp.toPx() })
+
+    val deletionStatus by eventViewModel.deletionStatus.collectAsState()
+
 
     AnimatedVisibility(
         visible = show,
@@ -60,20 +66,30 @@ fun DeleteItem(
             dismissState.reset()
         }
     }
+    LaunchedEffect(deletionStatus) {
+        if (deletionStatus == true) {
+            Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show()
+            show = false
+        } else if (deletionStatus == false) {
+            Toast.makeText(context, "Cannot delete event when offline", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     if (showDialog) {
         ShowConfirmationDialog(onConfirm = {
-            if (onDelete()) { // Check if delete was successful
-                show = false
-                Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show()
-                // Hide the item if delete was successful
-            } else {
-                Toast.makeText(context, "Cannot delete event when offline", Toast.LENGTH_SHORT)
-                    .show()
-            }
+            onDelete()
+            //Log.d("DeleteEvent", "deletionStatus: $deletionStatus")
+//            if (deletionStatus == true) {
+//                Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show()
+//                show = false
+//            } else if (deletionStatus == false) {
+//                Toast.makeText(context, "Cannot delete event when offline", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
             showDialog = false
         }, onDismiss = {
             showDialog = false
         })
     }
+
 }

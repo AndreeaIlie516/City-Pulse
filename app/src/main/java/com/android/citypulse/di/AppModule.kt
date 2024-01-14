@@ -53,7 +53,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideWebSocketEventDataSource(networkChecker: NetworkChecker): WebSocketEventDataSource {
-        val webSocketUrl = "ws://10.0.2.2:8080/ws"
+        val webSocketUrl = "ws://10.0.2.2:6000/ws"
         return WebSocketEventDataSource(networkChecker, webSocketUrl)
     }
 
@@ -61,7 +61,7 @@ object AppModule {
     @Provides
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080")
+            .baseUrl("http://10.0.2.2:6000")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
