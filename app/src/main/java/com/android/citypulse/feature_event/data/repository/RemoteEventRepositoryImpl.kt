@@ -31,17 +31,26 @@ class RemoteEventRepositoryImpl(
     override suspend fun observeWebSocketEvents(): Flow<WebSocketUpdate> =
         webSocketEventDataSource.observeWebSocketUpdates()
 
-    override suspend fun insertEvent(event: Event) {
-        Log.d("RemoteEventRepositoryImpl", "event: $event")
-        val eventForServer = EventServer(
-            time = event.time,
-            band = event.band,
-            location = event.location,
-            image_url = event.image_url,
-            is_private = event.is_private,
-            is_favourite = event.is_favourite
-        )
-        eventApi.createEvent(eventForServer)
+    override suspend fun insertEvent(event: Event): Event {
+        try {
+            val eventForServer = EventServer(
+                time = event.time,
+                band = event.band,
+                location = event.location,
+                image_url = event.image_url,
+                is_private = event.is_private,
+                is_favourite = event.is_favourite
+            )
+            val response = eventApi.createEvent(eventForServer)
+            if (response.isSuccessful) {
+                return response.body() ?: throw Exception("Failed to retrieve created event")
+            } else {
+                throw Exception("Failed to create event: ${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            Log.e("RemoteEventRepository", "Error inserting event: ${e.message}")
+            throw Exception("Server error occurred while creating the event.")
+        }
     }
 
     override suspend fun deleteEvent(event: Event) {
@@ -49,15 +58,20 @@ class RemoteEventRepositoryImpl(
     }
 
     override suspend fun updateEvent(event: Event) {
-        val eventForServer = EventServer(
-            time = event.time,
-            band = event.band,
-            location = event.location,
-            image_url = event.image_url,
-            is_private = event.is_private,
-            is_favourite = event.is_favourite
-        )
-        eventApi.updateEvent(event.ID, eventForServer)
+        try {
+            val eventForServer = EventServer(
+                time = event.time,
+                band = event.band,
+                location = event.location,
+                image_url = event.image_url,
+                is_private = event.is_private,
+                is_favourite = event.is_favourite
+            )
+            eventApi.updateEvent(event.ID, eventForServer)
+        } catch (e: Exception) {
+            Log.e("RemoteEventRepository", "Error updating event: ${e.message}")
+            throw Exception("Server error occurred while updating the event.")
+        }
     }
 
     override suspend fun addEventToFavorites(event: Event) {

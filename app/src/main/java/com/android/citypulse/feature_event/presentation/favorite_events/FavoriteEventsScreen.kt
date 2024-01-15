@@ -1,5 +1,6 @@
 package com.android.citypulse.feature_event.presentation.favorite_events
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomEnd
@@ -33,6 +36,7 @@ import com.android.citypulse.feature_event.presentation.events.components.Delete
 import com.android.citypulse.feature_event.presentation.util.Screen
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FavoriteEventsScreen(
     navController: NavController,
@@ -42,17 +46,23 @@ fun FavoriteEventsScreen(
 
     val state = eventViewModel.state.value
 
-    Column(
-        modifier = modifier
+    val snackbarHostState = eventViewModel.snackbarHostState
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) {
-        SetScreenTitle(modifier = modifier)
-        state.events.let {
-            EventsList(
-                eventList = it,
-                eventViewModel = eventViewModel,
-                modifier = modifier,
-                navController = navController
-            )
+
+        Column(
+            modifier = modifier
+        ) {
+            SetScreenTitle(modifier = modifier)
+            state.events.let {
+                EventsList(
+                    eventList = it,
+                    eventViewModel = eventViewModel,
+                    modifier = modifier,
+                    navController = navController
+                )
+            }
         }
     }
 }
@@ -92,7 +102,8 @@ private fun EventsList(
         LazyColumn(
             modifier = modifier
         ) {
-            val filteredEvents = eventList.filter { it.is_favourite || it.is_private }
+            val filteredEvents =
+                eventList.filter { (it.is_favourite || it.is_private) && it.action != "delete" }
             items(filteredEvents) { event ->
                 DeleteItem(event = event,
                     onClickEvent = {},

@@ -27,6 +27,10 @@ class LocalEventRepositoryImpl(
         dao.deleteEvent(event)
     }
 
+    override suspend fun updateEvent(event: Event) {
+        dao.updateEvent(event)
+    }
+
     override suspend fun deleteAll() {
         Log.d("EventsRepositoryImpl", "deleteAllEvents called")
         dao.deleteAll()
@@ -41,8 +45,12 @@ class LocalEventRepositoryImpl(
 
         }
 
-        Log.d("EventsRepositoryImpl", "events from")
+
         val eventsFromDb = dao.getEvents()
         Log.d("EventsRepositoryImpl", "events from db: $eventsFromDb")
+    }
+
+    override suspend fun getEventsWithPendingActions(): List<Event> {
+        return dao.getEventsWithPendingActions()
     }
 }

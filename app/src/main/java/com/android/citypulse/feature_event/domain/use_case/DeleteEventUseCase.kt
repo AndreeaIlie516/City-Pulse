@@ -1,5 +1,6 @@
 package com.android.citypulse.feature_event.domain.use_case
 
+import android.util.Log
 import com.android.citypulse.feature_event.data.network.NetworkChecker
 import com.android.citypulse.feature_event.domain.model.Event
 import com.android.citypulse.feature_event.domain.repository.LocalEventRepository
@@ -11,16 +12,21 @@ class DeleteEventUseCase(
     private val networkChecker: NetworkChecker
 ) {
 
-    suspend operator fun invoke(event: Event) {
+    suspend operator fun invoke(event: Event): String {
         if (networkChecker.isNetworkAvailable()) {
             try {
                 remoteRepository.deleteEvent(event)
                 localRepository.deleteEvent(event)
+                return "Success"
             } catch (e: Exception) {
-                localRepository.insertEvent(event.copy(action = "pending_delete"))
+                Log.d("DeleteEventUseCase", "Cannot delete")
+                return "Failed"
+                //throw Exception("Failed to delete the event. Please try again later.")
             }
         } else {
-            localRepository.insertEvent(event.copy(action = "pending_delete"))
+            Log.d("DeleteEventUseCase", "Not connected. Cannot delete")
+            return "Failed"
+            //throw Exception("Failed to delete the event. Please try again later.")
         }
     }
 }

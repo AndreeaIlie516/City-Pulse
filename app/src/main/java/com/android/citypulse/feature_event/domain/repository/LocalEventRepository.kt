@@ -13,7 +13,11 @@ interface LocalEventRepository {
 
     suspend fun deleteEvent(event: Event)
 
+    suspend fun updateEvent(event: Event)
+
     suspend fun deleteAll()
 
     suspend fun clearAndCacheEvents(eventsFlow: Flow<List<Event>>)
+
+    suspend fun getEventsWithPendingActions(): List<Event>
 }

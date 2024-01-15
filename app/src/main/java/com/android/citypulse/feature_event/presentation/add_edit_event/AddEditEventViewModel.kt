@@ -205,7 +205,7 @@ constructor(
                         } else {
                             Event(
                                 idLocal = 0,
-                                ID = "0",
+                                ID = currentEventId!!,
                                 time = eventTime.value.text,
                                 band = eventBand.value.text,
                                 location = eventLocation.value.text,
@@ -220,7 +220,7 @@ constructor(
                     } catch (e: InvalidEventException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
-                                message = e.message ?: "Couldn't save event"
+                                message = e.message ?: "Couldn't update event"
                             )
                         )
                     }

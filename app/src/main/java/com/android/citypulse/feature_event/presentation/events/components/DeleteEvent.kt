@@ -27,25 +27,23 @@ fun DeleteItem(
     event: Event,
     onClickEvent: () -> Unit,
     onClickEditEvent: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Boolean // Returns a Boolean indicating success or failure
 ) {
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
     var show by remember { mutableStateOf(true) }
-    val dismissState = rememberDismissState(
-        confirmValueChange = {
-            it == DismissValue.DismissedToStart
-        }, positionalThreshold = { 150.dp.toPx() }
-    )
+    val dismissState = rememberDismissState(confirmValueChange = {
+        it == DismissValue.DismissedToStart
+    }, positionalThreshold = { 150.dp.toPx() })
+
     AnimatedVisibility(
-        show, exit = fadeOut(spring())
+        visible = show,
+        exit = fadeOut(spring())
     ) {
         SwipeToDismiss(
             state = dismissState,
-            modifier = Modifier,
-            background = {
-                DismissBackground(dismissState)
-            },
+            modifier = modifier,
+            background = { DismissBackground(dismissState) },
             dismissContent = {
                 EventCellFavoriteScreen(
                     event = event,
@@ -65,10 +63,15 @@ fun DeleteItem(
 
     if (showDialog) {
         ShowConfirmationDialog(onConfirm = {
-            onDelete()
-            Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show()
+            if (onDelete()) { // Check if delete was successful
+                show = false
+                Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show()
+                // Hide the item if delete was successful
+            } else {
+                Toast.makeText(context, "Cannot delete event when offline", Toast.LENGTH_SHORT)
+                    .show()
+            }
             showDialog = false
-            show = false
         }, onDismiss = {
             showDialog = false
         })

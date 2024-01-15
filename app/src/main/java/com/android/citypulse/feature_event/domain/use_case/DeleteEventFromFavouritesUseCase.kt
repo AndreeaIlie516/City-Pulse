@@ -10,9 +10,9 @@ class DeleteEventFromFavouritesUseCase(
     private val remoteRepository: RemoteEventRepository,
     private val networkChecker: NetworkChecker
 ) {
-    suspend operator fun invoke(event: Event) {
+    suspend operator fun invoke(event: Event): String {
         if (networkChecker.isNetworkAvailable()) {
-            try {
+            return try {
                 remoteRepository.deleteEventFromFavorites(event)
                 localRepository.insertEvent(
                     event.copy(
@@ -20,21 +20,12 @@ class DeleteEventFromFavouritesUseCase(
                         action = null
                     )
                 )
+                "Success"
             } catch (e: Exception) {
-                localRepository.insertEvent(
-                    event.copy(
-                        is_favourite = false,
-                        action = "pending_delete_from_favourites"
-                    )
-                )
+                "Failed"
             }
         } else {
-            localRepository.insertEvent(
-                event.copy(
-                    is_favourite = false,
-                    action = "pending_delete_from_favourites"
-                )
-            )
+            return "Failed"
         }
     }
 }

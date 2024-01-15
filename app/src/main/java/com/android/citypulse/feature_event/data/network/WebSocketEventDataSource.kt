@@ -73,11 +73,10 @@ class WebSocketEventDataSource(
                     t: Throwable,
                     response: okhttp3.Response?
                 ) {
+                    isConnected = false
                     if (t is SocketException) {
-                        Log.e("WebSocket", "Connection lost. Reconnecting...")
-                        isConnected = false
-                        reconnect()
-                        // Implement reconnection logic or switch to offline mode
+                        Log.e("WebSocket", "Connection lost. Waiting for reconnection...")
+                        scheduleReconnect()
                     } else {
                         Log.e("WebSocket", "WebSocket Failure: ${t.message}")
                     }
@@ -93,10 +92,25 @@ class WebSocketEventDataSource(
         reconnectJob?.cancel()
         reconnectJob = GlobalScope.launch {
             while (!isConnected) {
-                delay(5000) // Delay before attempting to reconnect (adjust as needed)
+                delay(5000)
                 if (!isConnected) {
                     Log.i("WebSocketEventDataSource", "Reconnecting...")
-                    //connectWebSocket()
+                    connectWebSocket()
+                }
+            }
+        }
+    }
+
+    private fun scheduleReconnect() {
+        var retryDelay = 1000L // 1 second
+        reconnectJob?.cancel()
+        reconnectJob = GlobalScope.launch {
+            while (!isConnected && networkChecker.isNetworkAvailable()) {
+                delay(retryDelay)
+                retryDelay = (retryDelay * 2).coerceAtMost(60000) // Max 60 seconds
+                if (!isConnected) {
+                    Log.i("WebSocketEventDataSource", "Reconnecting...")
+                    connectWebSocket()
                 }
             }
         }

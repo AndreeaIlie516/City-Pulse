@@ -9,7 +9,7 @@ interface RemoteEventRepository {
 
     suspend fun observeWebSocketEvents(): Flow<WebSocketUpdate>
 
-    suspend fun insertEvent(event: Event)
+    suspend fun insertEvent(event: Event): Event
 
     suspend fun deleteEvent(event: Event)
 

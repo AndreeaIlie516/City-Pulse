@@ -23,15 +23,15 @@ class AddEventUseCase(
         if (event.location.isBlank()) {
             throw InvalidEventException("The location of the event can't be empty.")
         }
-        if (networkChecker.isNetworkAvailable()) {
-            try {
-                remoteRepository.insertEvent(event)
+        try {
+            if (networkChecker.isNetworkAvailable()) {
+                val newEvent = remoteRepository.insertEvent(event)
                 localRepository.insertEvent(event.copy(action = null))
-            } catch (e: Exception) {
-                localRepository.insertEvent(event.copy(action = "pending_add"))
+            } else {
+                localRepository.insertEvent(event.copy(action = "add"))
             }
-        } else {
-            localRepository.insertEvent(event.copy(action = "pending_add"))
+        } catch (e: Exception) {
+            throw Exception("Failed to add the event. Please try again later.")
         }
     }
 }

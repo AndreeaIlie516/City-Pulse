@@ -1,5 +1,6 @@
 package com.android.citypulse.feature_event.domain.use_case
 
+import android.util.Log
 import com.android.citypulse.feature_event.data.network.NetworkChecker
 import com.android.citypulse.feature_event.domain.model.Event
 import com.android.citypulse.feature_event.domain.model.InvalidEventException
@@ -23,15 +24,17 @@ class UpdateEventUseCase(
         if (event.location.isBlank()) {
             throw InvalidEventException("The location of the event can't be empty.")
         }
-        if (networkChecker.isNetworkAvailable()) {
-            try {
+        try {
+            if (networkChecker.isNetworkAvailable()) {
                 remoteRepository.updateEvent(event)
+                Log.d("UpdateEventUseCase", "event: $event")
                 localRepository.insertEvent(event.copy(action = null))
-            } catch (e: Exception) {
-                localRepository.insertEvent(event.copy(action = "pending_update"))
+            } else {
+                Log.d("UpdateEventUseCase", "event: $event")
+                localRepository.insertEvent(event.copy(ID = event.ID, action = "update"))
             }
-        } else {
-            localRepository.insertEvent(event.copy(action = "pending_update"))
+        } catch (e: Exception) {
+            throw Exception("Failed to update the event. Please try again later.")
         }
     }
 }

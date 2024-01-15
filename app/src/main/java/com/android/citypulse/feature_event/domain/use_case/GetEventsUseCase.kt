@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
 
 class GetEventsUseCase(
     private val localRepository: LocalEventRepository,
@@ -32,16 +31,7 @@ class GetEventsUseCase(
                     localEvents.combine(flowOf(remoteEvents)) { flowValue, listValue ->
                         (flowValue + listValue).distinctBy { it.ID }
                     }
-                val mergedList = mutableListOf<Event>()
-                Log.d("GetEventsUseCase", "merged events: $mergedEvents")
-                mergedEvents.onEach { list ->
-                    Log.d("GetEventsUseCase", "list on merge: $list")
-                    list.onEach { event ->
-                        Log.d("GetEventsUseCase", "event on merge: $event")
-                        mergedList.add(event)
-                    }
-                }
-                Log.d("GetEventsUseCase", "mergedList: $mergedList")
+
                 localRepository.clearAndCacheEvents(mergedEvents)
 
                 emitAll(mergedEvents)

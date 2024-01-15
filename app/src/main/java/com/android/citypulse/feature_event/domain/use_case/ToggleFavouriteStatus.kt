@@ -33,14 +33,14 @@ class ToggleFavouriteStatus(
                     localRepository.insertEvent(
                         event.copy(
                             is_favourite = false,
-                            action = "pending_add_to_favourites"
+                            action = "add_to_favourites"
                         )
                     )
                 } else {
                     localRepository.insertEvent(
                         event.copy(
                             is_favourite = true,
-                            action = "delete_add_from_favourites"
+                            action = "delete_from_favourites"
                         )
                     )
                 }
@@ -50,14 +50,14 @@ class ToggleFavouriteStatus(
                 localRepository.insertEvent(
                     event.copy(
                         is_favourite = false,
-                        action = "pending_add_to_favourites"
+                        action = "add_to_favourites"
                     )
                 )
             } else {
                 localRepository.insertEvent(
                     event.copy(
                         is_favourite = true,
-                        action = "delete_add_from_favourites"
+                        action = "delete_from_favourites"
                     )
                 )
             }
